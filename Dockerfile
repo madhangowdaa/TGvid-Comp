@@ -19,11 +19,14 @@ WORKDIR /bot
 # Set non-interactive mode for apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install required packages in a single command
+# Install required packages (including ffmpeg)
 RUN apt update -qq && \
     apt install -y --no-install-recommends \
         git wget pv jq python3-dev ffmpeg mediainfo neofetch fontconfig && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Verify ffmpeg installation
+RUN which ffmpeg && ffmpeg -version
 
 # Copy bot files
 COPY . .
