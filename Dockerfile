@@ -19,14 +19,17 @@ WORKDIR /bot
 # Set non-interactive mode for apt
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install required packages (including ffmpeg)
+# Install system dependencies (including ffmpeg)
 RUN apt update -qq && \
     apt install -y --no-install-recommends \
         git wget pv jq python3-dev ffmpeg mediainfo neofetch fontconfig && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Verify ffmpeg installation
-RUN which ffmpeg && ffmpeg -version
+# Manually create a symlink if ffmpeg is missing
+RUN ln -s /usr/bin/ffmpeg /usr/local/bin/ffmpeg
+
+# Verify ffmpeg installation during build
+RUN echo "Checking ffmpeg installation..." && which ffmpeg && ffmpeg -version
 
 # Copy bot files
 COPY . .
@@ -39,3 +42,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Run the bot
 CMD ["bash", "run.sh"]
+
