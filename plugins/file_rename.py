@@ -11,6 +11,17 @@ from helper.database import db
 from PIL import Image
 import os
 import time
+import subprocess
+
+def check_ffmpeg():
+    try:
+        result = subprocess.run(["ffmpeg", "-version"], capture_output=True, text=True)
+        return f"FFmpeg Installed ✅\n\n{result.stdout}"
+    except FileNotFoundError:
+        return "FFmpeg ❌ NOT INSTALLED"
+
+print(check_ffmpeg())  # This will print in Koyeb logs
+
 
 
 @Client.on_callback_query(filters.regex('rename'))
